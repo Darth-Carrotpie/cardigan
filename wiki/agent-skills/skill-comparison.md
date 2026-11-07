@@ -1,0 +1,43 @@
+# Skill comparison
+
+> Sources: Anthropic (anthropics/skills, doc-coauthoring), 2025-12-04; Notion Labs (notion-meeting-intelligence), 2026-02-02; Anthropic (knowledge-work-plugins status-report, stakeholder-update), 2026-03-13; Hardik Pandya (stop-slop), 2026-03-17; Anthropic (internal-comms), 2026-04-20; Denis Shiryaev / JetBrains AI blog, 2026-07-06; surendranb (business-writing), 2026-08-14; Anthropic (discernment-nudge), 2026-08-17; Dietrich Gebert (ponytail repo, agentic benchmark), 2026-10-07; blader (humanizer), 2026-10-28; Alireza Rezvani (inbox-triage), 2026-10-30; Julius Brussee (caveman SKILL.md, README, HONEST-NUMBERS), 2026-10-31; Dietrich Gebert (ponytail README and SKILL.md v5), undated
+> Raw: [Anthropic skills: doc-coauthoring](../../raw/research/agent-skills/2025-12-04-anthropic-doc-coauthoring-skill.md); [notion-meeting-intelligence](../../raw/research/agent-skills/2026-02-02-openai-notion-meeting-intelligence-skill.md); [Anthropic knowledge-work-plugins: status-report and stakeholder-update](../../raw/research/agent-skills/2026-03-13-anthropic-knowledge-work-plugins-status-skills.md); [Stop Slop](../../raw/research/agent-skills/2026-03-17-stop-slop-skill.md); [Anthropic skills: internal-comms](../../raw/research/agent-skills/2026-04-20-anthropic-internal-comms-skill.md); [Does Speaking to Agents Like Cavemen Really Save 65% of Tokens? We Test](../../raw/research/agent-skills/2026-07-06-jetbrains-caveman-paired-ab-test.md); [writing-skills: business-writing (BLUF)](../../raw/research/agent-skills/2026-08-14-writing-skills-business-writing-bluf.md); [Anthropic skills: discernment-nudge](../../raw/research/agent-skills/2026-08-17-anthropic-discernment-nudge-skill.md); [Agentic benchmark: Ponytail 5 vs Ponytail vs no skill](../../raw/research/agent-skills/2026-10-07-ponytail-agentic-benchmark-method.md); [Humanizer: remove AI writing patterns](../../raw/research/agent-skills/2026-10-28-humanizer-ai-writing-skill.md); [inbox-triage (alirezarezvani/claude-skills)](../../raw/research/agent-skills/2026-10-30-inbox-triage-drafts-only-skill.md); [Caveman: SKILL.md, README, Honest Numbers](../../raw/research/agent-skills/2026-10-31-caveman-terse-output-skill.md); [Ponytail README (v5, main)](../../raw/research/agent-skills/ponytail-readme-v5.md); [Ponytail SKILL.md (v5, main)](../../raw/research/agent-skills/ponytail-skill-md-v5.md)
+> Updated: 2026-10-31
+
+## Overview
+
+A side-by-side view of the published agent skills in this wiki that touch writing, office work or output size. The question that matters for cardigan is the last column: does the skill ever decide that a deliverable should not be produced? Entries are based on each skill's own files (repo evidence); "self-measurement" means what the authors or outsiders have published about whether the skill works.
+
+## Comparison
+
+| Skill | What it governs | Always-on vs commands | Levels | Self-measurement | Decides whether a deliverable should exist? |
+|---|---|---|---|---|---|
+| ponytail v5 (Dietrich Gebert) | How much code an agent writes for a coding task, and the shape of its reply | Always-on for the session, plus one-shot commands (review, audit, debt, gain, help); rules-file adapters get the ruleset without commands | lite, full (default), ultra | Author's three-arm paired benchmark (39 tasks, 5 runs): -53% lines and -26% cost vs no skill, hidden checks level, blind reply judge prefers v5 to v4.13; in-session band (5.3) | Partly. Rung 1 "Does it need to exist?" cuts unrequested features, not the task; only ultra pushes back on the request |
+| doc-coauthoring (Anthropic) | Drafting workflow for specs, proposals, decision docs | Model-invoked workflow on doc requests; user can skip stages | None | In-workflow reader test by a context-free sub-agent; no published evals | No. Asks audience and desired impact; asks "if anything can be removed" only after 3 stable iterations |
+| notion-meeting-intelligence (Notion Labs, Codex catalog) | Meeting agendas and pre-reads from Notion context plus research | Model-invoked on meeting-prep requests | None | Manual eval scenarios (query + success criteria) across Haiku, Sonnet and Opus; no results published | No. Confirms goal and "decisions needed" but always drafts; evals reward "comprehensive" output |
+| status-report / stakeholder-update (Anthropic knowledge-work-plugins) | Leadership status reports (eight-heading template), audience versions of one update | Model-invoked and slash command via `argument-hint` | Cadence argument (weekly, monthly, quarterly), not intensity | None shipped | No. Always fills the template; the only "whether" rule is "Cancel standup if there is nothing to sync on" |
+| stop-slop (Hardik Pandya) | Sentence-level prose style: filler, formulaic structures, passive voice, rhythm | Model-invoked when drafting or editing prose | None | In-prompt 5-dimension self-score (revise below 35/50); no benchmark | No. Density ("Anything cuttable?") works inside existing text |
+| internal-comms (Anthropic) | Format of internal communications by type (3P update, newsletter, FAQ, general) | Model-invoked router to format files | None | None shipped | No. Asks for clarification only when the type matches no format; general comms asks the "purpose" |
+| Caveman (Julius Brussee) | Phrasing of chat replies (terse voice); exempts docs, tickets and third-party messages | Always-on once triggered ("Every response, whole session"), plus one-shot commands (commit, review, compress, stats) | Three, as separate skills: `/caveman`, `/ultracave`, `/megacave` | HONEST-NUMBERS vs an "Answer concisely." control (3% at median for default, n=10); independent JetBrains paired A/B: "Measured saving: 8.5%.", no detectable quality change | No |
+| business-writing (surendranb) | Shape of business messages: BLUF, numbers, explicit ask, buzzword ban | Model-invoked on business communication | None | Checkable verify list (first sentence holds the point, one ask with deadline, no sentence over 25 words); no evals | No. "delete everything else" applies inside a message assumed to be sent |
+| humanizer v3.1.0 (blader) | Wording and structure of existing text: AI tells ranked by strength | Model-invoked on editing or reviewing prose; output modes (pasted, file, embedded) | None | One outside blind pairwise study (16 / 16 preferred the rewrite); detection rate barely moved; no maintainer benchmark | No. §26 trims what a reply re-explains, but assumes a reply is written |
+| inbox-triage (Alireza Rezvani) | Email classification, reply drafts (never sent), run report | Triggered by request ("triage my inbox") or a recurring schedule (1–3x daily) | None | Post-run safety validator fails any send; proposed signal: drafts sent as-is vs edited vs deleted; no benchmark | Yes per email (no draft for FYI, already-replied, or unsure); no for its own report, produced even on an empty inbox |
+| discernment-nudge (Anthropic) | Optional 2-3 follow-up questions appended to a substantive reply | Effectively always-on: model-invoked "BEFORE finalizing your reply"; at most once per conversation | None | None shipped | Only for its own add-on ("Silence is the right default"); not for the plan or email it follows |
+
+## For cardigan
+
+Interpretation, not source claims:
+
+- Only inbox-triage makes a real per-item call on whether output should exist, and only ponytail's ultra level questions the request. No surveyed skill decides, for an office deliverable, that the right output is nothing, a link or a built-in tool feature: that is cardigan's gap to fill.
+- The office skills that ship evals either reward more output (Notion) or measure nothing outside the prompt (stop-slop's self-score). cardigan should copy the measurement habits of ponytail and Caveman's HONEST-NUMBERS (paired runs, a concise control, guard metrics), not those of the office skills.
+- The successful always-on pattern is small: one canonical prompt, levels, a never-cut list, a fixed reply ending, and commands kept for one-shot jobs (ponytail, caveman, discernment-nudge's silence-by-default).
+- Prose and terse-voice skills are a finishing layer: caveman exempts third-party messages and stop-slop's "skip softening" conflicts with politeness evidence, so cardigan uses their fidelity rules (keep negations, numbers, every supported claim) and leaves their voice rules behind.
+
+## See Also
+
+- [Ponytail](ponytail.md)
+- [Terse-output skills](terse-output-skills.md)
+- [Prose-style skills](prose-style-skills.md)
+- [Office workflow skills](office-workflow-skills.md)
+- [Skill authoring guidance](skill-authoring-guidance.md)
+- [Guard metrics](../skill-evals/guard-metrics.md)
